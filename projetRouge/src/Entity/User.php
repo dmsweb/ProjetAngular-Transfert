@@ -2,33 +2,35 @@
 
 namespace App\Entity;
 
+use App\Entity\Compte;
+use App\Entity\Profil;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
 
 /**
  * @ApiResource()
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
-class User implements AdvancedUserInterface
+class User implements UserInterface
 {
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
+
+    
     private $id; 
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      */
     private $username;
-
-    /**
-     * @ORM\Column(type="json")
-     */
-    private $roles = [];
 
     /**
      * @var string The hashed password
@@ -57,6 +59,21 @@ class User implements AdvancedUserInterface
      */
     private $isActive;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Partenaire", mappedBy="partenaire", cascade={"persist", "remove"})
+     */
+    private $partenaire;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Compte", mappedBy="nuCompte")
+     */
+    private $comptes;
+
+    public function __construct()
+    {
+        $this->comptes = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -84,18 +101,11 @@ class User implements AdvancedUserInterface
      */
     public function getRoles(): array
     {
-        $roles = $this->roles;
+        $roles[] = $this->profil->getLibelle();
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
-    }
-
-    public function setRoles(array $roles): self
-    {
-        $this->roles = $roles;
-
-        return $this;
     }
 
     /**
@@ -178,17 +188,54 @@ class User implements AdvancedUserInterface
         return $this;
     }
 
-    public function isAccountNonExpired(){
-        return true;
+    public function getPartenaire(): ?Partenaire
+    {
+        return $this->partenaire;
     }
 
-    public function isAccountNonLocked(){
-        return true;
+    public function setPartenaire(?Partenaire $partenaire): self
+    {
+        $this->partenaire = $partenaire;
+
+        // set (or unset) the owning side of the relation if necessary
+        $newPartenaire = null === $partenaire ? null : $this;
+        if ($partenaire->getPartenaire() !== $newPartenaire) {
+            $partenaire->setPartenaire($newPartenaire);
+        }
+
+        return $this;
     }
-    public function isCredentialsNonExpired(){
-        return true;
+
+    /**
+     * @return Collection|Compte[]
+     */
+    public function getComptes(): Collection
+    {
+        return $this->comptes;
     }
-    public function isEnabled(){
-        return $this->isActive;
+
+    public function addCompte(Compte $compte): self
+    {
+        if (!$this->comptes->contains($compte)) {
+            $this->comptes[] = $compte;
+            $compte->setNuCompte($this);
+        }
+
+        return $this;
     }
+
+    public function removeCompte(Compte $compte): self
+    {
+        if ($this->comptes->contains($compte)) {
+            $this->comptes->removeElement($compte);
+            // set the owning side to null (unless already changed)
+            if ($compte->getNuCompte() === $this) {
+                $compte->setNuCompte(null);
+            }
+        }
+
+        return $this;
+    }
+
+   
 }
