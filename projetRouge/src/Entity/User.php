@@ -7,8 +7,10 @@ use App\Entity\Profil;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\HttpFoundation\File\File;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Vich\UploaderBundle\Mapping\Annotation\UploadableField;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 
@@ -54,6 +56,8 @@ class User implements UserInterface
      */
     private $login;
 
+    private $roles=[];
+
     /**
      * @ORM\Column(type="boolean")
      */
@@ -68,6 +72,17 @@ class User implements UserInterface
      * @ORM\OneToMany(targetEntity="App\Entity\Compte", mappedBy="nuCompte")
      */
     private $comptes;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $imageNom;
+
+    /**
+     * @Vich\UploadableField(mapping="transfert_objects", fileNameProperty="imageNom")
+     * @var File
+     */
+    private $imageFile;
 
     public function __construct()
     {
@@ -237,5 +252,25 @@ class User implements UserInterface
         return $this;
     }
 
-   
+    public function getImageNom(): ?string
+    {
+        return $this->imageNom;
+    }
+
+    public function setImageNom(?string $imageNom): self
+    {
+        $this->imageNom = $imageNom;
+
+        return $this;
+    }
+
+    public function setImageFile(File $image = null)
+    {
+        $this->imageFile = $image;
+    }
+
+    public function getImageFile()
+    {
+        return $this->imageFile;
+    }
 }

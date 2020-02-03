@@ -15,51 +15,37 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class UserDataPersister implements DataPersisterInterface
 {
     
-    
-    public function __construct(EntityManagerInterface $entityManager, UserPasswordEncoderInterface $userPasswordEncoder, TokenStorageInterface $tokenStorage)
+    private $userPasswordEncoder;
+    public function __construct(EntityManagerInterface $entitymanager, UserPasswordEncoderInterface $userPasswordEncoder)
     {
         $this->userPasswordEncoder = $userPasswordEncoder;
-        $this->entityManager = $entityManager;
-        $this->tokenStorage = $tokenStorage;
+        $this->entityManager = $entitymanager;
     }
     public function supports($data): bool
     {
         return $data instanceof User;
         // TODO: Implement supports() method.
     }
-    public function persist($data)
-    {
-        //Recuperation de l'utilisateur qui s'est connecte
-        $recupUser=$this->tokenStorage->getToken()->getUser()->getRoles()[0];
-        //Recuperation de l'utilisateur a ajouter ou a modifier
-        $recupUseradd=$data->getRoles()[0];
-        if($recupUser=="ROLE_SUPER_ADMIN"){
-            if($recupUseradd ==  "ROLE_SUPER_ADMIN"){
-                throw new HttpException("401","Vous n'etes pas autoriser !");
+   public function persist($data)
+   {
     
-            }else{
-                $data->setPassword($this->userPasswordEncoder->encodePassword($data, $data->getPassword()));
-                
-                $data->eraseCredentials();
-                
-                $this->entityManager->persist($data);
-                $this->entityManager->flush();
-            }
-        }if($recupUser=="ROLE_ADMIN")
-            if($recupUseradd ==  "ROLE_SUPER_ADMIN" || $recupUseradd ==  "ROLE_ADMIN" ){
-                throw new HttpException("401","Vous n'avez pas cette autorisation");
-            }else{
-                $data->setPassword($this->userPasswordEncoder->encodePassword($data, $data->getPassword()));
-                
-                $data->eraseCredentials();
-                
-                $this->entityManager->persist($data);
-                $this->entityManager->flush();
-            }
+    if ($data->getPassword()) {
+        $data->setPassword(
+            $this->userPasswordEncoder->encodePassword($data, $data->getPassword())
+        );
+        $data->eraseCredentials();
     }
-    public function remove($data)
-    {
-        $this->entityManager->remove($data);
-        $this->entityManager->flush();
-    }
+      
+
+
+       $this->entityManager->persist($data);
+       $this->entityManager->flush();
+   }
+
+   public function remove($data)
+   {
+    $this->entityManager->remove($data);
+    $this->entityManager->flush();
+       // TODO: Implement remove() method.
+   }
 }

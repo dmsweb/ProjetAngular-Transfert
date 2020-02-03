@@ -19,30 +19,33 @@ class ApiFixtures extends Fixture
     public function load(ObjectManager $manager)
     {
         $profil= new Profil();
-        $profil->setLibelle('AdminSupp');
+        $profil->setLibelle('ROLE_SUPER_ADMIN');
         $manager->persist($profil);
         $manager->flush();
-
+        //
         $profil= new Profil();
-        $profil->setLibelle('Admin');
+        $profil->setLibelle('ROEL_ADMIN');
         $manager->persist($profil);
         $manager->flush();
-
-
+        //
         $profil= new Profil();
-        $profil->setLibelle('Caisier');
+        $profil->setLibelle('ROLE_CAISSIER');
+        $manager->persist($profil);
+        $manager->flush();
+        //
+        $profil= new Profil();
+        $profil->setLibelle('ROLE_PARTENAIRE');
         $manager->persist($profil);
         $manager->flush();
 
 
         $user= new User();
         $user->setNomComplet('Ousmane Dieng');
-        $user->setLogin('AdminSupp');
+        $user->setLogin('ROLE_SUPER_ADMIN');
         $user->setProfil($profil);
         $user->setUsername('ousmane');
         $password= $this->encoder->encodePassword($user, 'admin123');
         $user->setPassword($password);
-        $user->setRoles(array('ROLE_ADMIN_SYSTEM'));
         $user->setIsActive(true);
         $manager->persist($user);
 
