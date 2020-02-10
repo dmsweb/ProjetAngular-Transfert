@@ -2,10 +2,13 @@
 
 namespace App\Entity;
 
+use App\Entity\User;
+use App\Entity\Depot;
+use App\Entity\Partenaire;
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ApiResource()
@@ -36,31 +39,30 @@ class Compte
     private $numeroCompte;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="comptes")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $iduser;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Depot", mappedBy="numeroCompte")
      */
     private $depots;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Partenaire", inversedBy="comptes")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="compte")
      */
-    private $partenaireId;
+    private $idCompte;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="userCompte")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="comptes")
      */
-    private $users;
+    private $iduser;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Partenaire", inversedBy="comptes1")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $partenaireCompte;
 
     public function __construct()
     {
         $this->depots = new ArrayCollection();
-        $this->users = new ArrayCollection();
+        $this->idCompte = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -104,18 +106,6 @@ class Compte
         return $this;
     }
 
-    public function getIduser(): ?User
-    {
-        return $this->iduser;
-    }
-
-    public function setIduser(?User $iduser): self
-    {
-        $this->iduser = $iduser;
-
-        return $this;
-    }
-
     /**
      * @return Collection|Depot[]
      */
@@ -147,46 +137,61 @@ class Compte
         return $this;
     }
 
-    public function getPartenaireId(): ?Partenaire
-    {
-        return $this->partenaireId;
-    }
-
-    public function setPartenaireId(?Partenaire $partenaireId): self
-    {
-        $this->partenaireId = $partenaireId;
-
-        return $this;
-    }
-
     /**
      * @return Collection|User[]
      */
-    public function getUsers(): Collection
+    public function getIdCompte(): Collection
     {
-        return $this->users;
+        return $this->idCompte;
     }
 
-    public function addUser(User $user): self
+    public function addIdCompte(User $idCompte): self
     {
-        if (!$this->users->contains($user)) {
-            $this->users[] = $user;
-            $user->setUserCompte($this);
+        if (!$this->idCompte->contains($idCompte)) {
+            $this->idCompte[] = $idCompte;
+            $idCompte->setCompte($this);
         }
 
         return $this;
     }
 
-    public function removeUser(User $user): self
+    public function removeIdCompte(User $idCompte): self
     {
-        if ($this->users->contains($user)) {
-            $this->users->removeElement($user);
+        if ($this->idCompte->contains($idCompte)) {
+            $this->idCompte->removeElement($idCompte);
             // set the owning side to null (unless already changed)
-            if ($user->getUserCompte() === $this) {
-                $user->setUserCompte(null);
+            if ($idCompte->getCompte() === $this) {
+                $idCompte->setCompte(null);
             }
         }
 
         return $this;
     }
+
+    public function getIduser(): ?User
+    {
+        return $this->iduser;
+    }
+
+    public function setIduser(?User $iduser): self
+    {
+        $this->iduser = $iduser;
+
+        return $this;
+    }
+
+    public function getPartenaireCompte(): ?Partenaire
+    {
+        return $this->partenaireCompte;
+    }
+
+    public function setPartenaireCompte(?Partenaire $partenaireCompte): self
+    {
+        $this->partenaireCompte = $partenaireCompte;
+
+        return $this;
+    }
+
+   
+
 }

@@ -9,11 +9,18 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 
 class SecurityController extends AbstractController
+
+/**
+ * @Route("/api")
+ */
 
 {
     public function register(Request $request, UserPasswordEncoderInterface $encoder)
@@ -36,5 +43,7 @@ class SecurityController extends AbstractController
 
         return new Response(sprintf('User %s successfully created', $user->getUsername()));
     }
+
+   
 
 }

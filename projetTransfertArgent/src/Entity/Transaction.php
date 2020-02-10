@@ -19,18 +19,6 @@ class Transaction
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="transaction")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $userTransact;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="Idtransaction")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $user;
-
-    /**
      * @ORM\Column(type="integer")
      */
     private $code;
@@ -120,28 +108,21 @@ class Transaction
      */
     private $status;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="transaction1")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $transact1;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="transaction2")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $transact2;
+
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function setUserTransact(?User $userTransact): self
-    {
-        $this->userTransact = $userTransact;
-
-        return $this;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): self
-    {
-        $this->user = $user;
-
-        return $this;
     }
 
     public function getCode(): ?int
@@ -356,6 +337,30 @@ class Transaction
     public function setStatus(bool $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getTransact1(): ?User
+    {
+        return $this->transact1;
+    }
+
+    public function setTransact1(?User $transact1): self
+    {
+        $this->transact1 = $transact1;
+
+        return $this;
+    }
+
+    public function getTransact2(): ?User
+    {
+        return $this->transact2;
+    }
+
+    public function setTransact2(?User $transact2): self
+    {
+        $this->transact2 = $transact2;
 
         return $this;
     }

@@ -3,18 +3,30 @@
 namespace App\Entity;
 
 use App\Entity\User;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\Depot;
+use App\Entity\Compte;
+use App\Entity\Partenaire;
+use App\Entity\Transaction;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Serializer\Annotation\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 
 
 /**
- * @ApiResource()
+ * @ApiResource( 
+ *   collectionOperations={
+ *          "get",
+ *          "post"={  
+ *  "access_control"="is_granted('POST', object)",
+*}
+ *     }
+ * )
+ * 
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
 class User implements UserInterface
@@ -40,7 +52,7 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=255)
      */
     private $login;
-
+   
     private $roles=[];
 
     /**
@@ -55,47 +67,46 @@ class User implements UserInterface
     private $profile;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transaction", mappedBy="transact1")
+     */
+    private $transaction1;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transaction", mappedBy="transact2")
+     */
+    private $transaction2;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Depot", mappedBy="depotuser")
+     */
+    private $iduserDepot;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Compte", inversedBy="idCompte")
+     */
+    private $compte;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Compte", mappedBy="iduser")
      */
     private $comptes;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Depot", mappedBy="userDepot")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Partenaire", inversedBy="users")
      */
-    private $depots;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Transaction", mappedBy="userTransact")
-     */
-    private $transaction;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Transaction", mappedBy="user")
-     */
-    private $Idtransaction;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Compte", inversedBy="users")
-     */
-    private $userCompte;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Partenaire", inversedBy="parte")
-     */
-    private $iduserPartenaire;
+    private $userParte;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Partenaire", mappedBy="user")
      */
     private $partenaire;
 
-
     public function __construct()
     {
+        $this->transaction1 = new ArrayCollection();
+        $this->transaction2 = new ArrayCollection();
+        $this->iduserDepot = new ArrayCollection();
         $this->comptes = new ArrayCollection();
-        $this->depots = new ArrayCollection();
-        $this->transaction = new ArrayCollection();
-        $this->Idtransaction = new ArrayCollection();
         $this->partenaire = new ArrayCollection();
     }
 
@@ -128,14 +139,13 @@ class User implements UserInterface
         return $this;
     }
 
-      /**
+    /**
      * @see UserInterface
      */
     public function getSalt()
     {
        return null;
     }
-
     /**
      * @see UserInterface
      */
@@ -190,6 +200,111 @@ class User implements UserInterface
     }
 
     /**
+     * @return Collection|Transaction[]
+     */
+    public function getTransaction1(): Collection
+    {
+        return $this->transaction1;
+    }
+
+    public function addTransaction1(Transaction $transaction1): self
+    {
+        if (!$this->transaction1->contains($transaction1)) {
+            $this->transaction1[] = $transaction1;
+            $transaction1->setTransact1($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTransaction1(Transaction $transaction1): self
+    {
+        if ($this->transaction1->contains($transaction1)) {
+            $this->transaction1->removeElement($transaction1);
+            // set the owning side to null (unless already changed)
+            if ($transaction1->getTransact1() === $this) {
+                $transaction1->setTransact1(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Transaction[]
+     */
+    public function getTransaction2(): Collection
+    {
+        return $this->transaction2;
+    }
+
+    public function addTransaction2(Transaction $transaction2): self
+    {
+        if (!$this->transaction2->contains($transaction2)) {
+            $this->transaction2[] = $transaction2;
+            $transaction2->setTransact2($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTransaction2(Transaction $transaction2): self
+    {
+        if ($this->transaction2->contains($transaction2)) {
+            $this->transaction2->removeElement($transaction2);
+            // set the owning side to null (unless already changed)
+            if ($transaction2->getTransact2() === $this) {
+                $transaction2->setTransact2(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Depot[]
+     */
+    public function getIduserDepot(): Collection
+    {
+        return $this->iduserDepot;
+    }
+
+    public function addIduserDepot(Depot $iduserDepot): self
+    {
+        if (!$this->iduserDepot->contains($iduserDepot)) {
+            $this->iduserDepot[] = $iduserDepot;
+            $iduserDepot->setDepotuser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIduserDepot(Depot $iduserDepot): self
+    {
+        if ($this->iduserDepot->contains($iduserDepot)) {
+            $this->iduserDepot->removeElement($iduserDepot);
+            // set the owning side to null (unless already changed)
+            if ($iduserDepot->getDepotuser() === $this) {
+                $iduserDepot->setDepotuser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getCompte(): ?Compte
+    {
+        return $this->compte;
+    }
+
+    public function setCompte(?Compte $compte): self
+    {
+        $this->compte = $compte;
+
+        return $this;
+    }
+
+    /**
      * @return Collection|Compte[]
      */
     public function getComptes(): Collection
@@ -220,121 +335,24 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return Collection|Depot[]
-     */
-    public function getDepots(): Collection
+    public function getUserParte(): ?Partenaire
     {
-        return $this->depots;
+        return $this->userParte;
     }
 
-    public function addDepot(Depot $depot): self
+    public function setUserParte(?Partenaire $userParte): self
     {
-        if (!$this->depots->contains($depot)) {
-            $this->depots[] = $depot;
-            $depot->setUserDepot($this);
-        }
-
-        return $this;
-    }
-
-    public function removeDepot(Depot $depot): self
-    {
-        if ($this->depots->contains($depot)) {
-            $this->depots->removeElement($depot);
-            // set the owning side to null (unless already changed)
-            if ($depot->getUserDepot() === $this) {
-                $depot->setUserDepot(null);
-            }
-        }
+        $this->userParte = $userParte;
 
         return $this;
     }
 
     /**
-     * @return Collection|Transaction[]
+     * @return Collection|Partenaire[]
      */
-    public function getTransaction(): Collection
+    public function getPartenaire(): Collection
     {
-        return $this->transaction;
-    }
-
-    public function addTransaction(Transaction $transaction): self
-    {
-        if (!$this->transaction->contains($transaction)) {
-            $this->transaction[] = $transaction;
-            $transaction->setUserTransact($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTransaction(Transaction $transaction): self
-    {
-        if ($this->transaction->contains($transaction)) {
-            $this->transaction->removeElement($transaction);
-            // set the owning side to null (unless already changed)
-            if ($transaction->getUserTransact() === $this) {
-                $transaction->setUserTransact(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Transaction[]
-     */
-    public function getIdtransaction(): Collection
-    {
-        return $this->Idtransaction;
-    }
-
-    public function addIdtransaction(Transaction $idtransaction): self
-    {
-        if (!$this->Idtransaction->contains($idtransaction)) {
-            $this->Idtransaction[] = $idtransaction;
-            $idtransaction->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeIdtransaction(Transaction $idtransaction): self
-    {
-        if ($this->Idtransaction->contains($idtransaction)) {
-            $this->Idtransaction->removeElement($idtransaction);
-            // set the owning side to null (unless already changed)
-            if ($idtransaction->getUser() === $this) {
-                $idtransaction->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getUserCompte(): ?Compte
-    {
-        return $this->userCompte;
-    }
-
-    public function setUserCompte(?Compte $userCompte): self
-    {
-        $this->userCompte = $userCompte;
-
-        return $this;
-    }
-
-    public function getIduserPartenaire(): ?Partenaire
-    {
-        return $this->iduserPartenaire;
-    }
-
-    public function setIduserPartenaire(?Partenaire $iduserPartenaire): self
-    {
-        $this->iduserPartenaire = $iduserPartenaire;
-
-        return $this;
+        return $this->partenaire;
     }
 
     public function addPartenaire(Partenaire $partenaire): self
@@ -360,6 +378,6 @@ class User implements UserInterface
         return $this;
     }
 
-
-    
 }
+
+   

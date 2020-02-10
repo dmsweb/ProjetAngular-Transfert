@@ -2,10 +2,12 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\User;
+use App\Entity\Compte;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  *  @ApiResource()
@@ -41,34 +43,32 @@ class Partenaire
     private $telephone;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Compte", mappedBy="partenaireId")
-     */
-    private $comptes;
-
-
-    /**
      * @ORM\Column(type="string", length=255)
      */
     private $nomComplet;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="iduserPartenaire")
+     * @ORM\OneToMany(targetEntity="App\Entity\Compte", mappedBy="partenaireCompte")
      */
-    private $parte;
+    private $comptes1;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="userParte")
+     */
+    private $users;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="partenaire")
      */
     private $user;
 
-
     public function __construct()
     {
+        $this->comptes1 = new ArrayCollection();
         $this->users = new ArrayCollection();
-        $this->comptes = new ArrayCollection();
-        $this->Users = new ArrayCollection();
-        $this->parte = new ArrayCollection();
     }
+
+   
 
     public function getId(): ?int
     {
@@ -123,60 +123,6 @@ class Partenaire
         return $this;
     }
 
-    public function addUser(User $user): self
-    {
-        if (!$this->users->contains($user)) {
-            $this->users[] = $user;
-            $user->setPartenaire($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUser(User $user): self
-    {
-        if ($this->users->contains($user)) {
-            $this->users->removeElement($user);
-            // set the owning side to null (unless already changed)
-            if ($user->getPartenaire() === $this) {
-                $user->setPartenaire(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Compte[]
-     */
-    public function getComptes(): Collection
-    {
-        return $this->comptes;
-    }
-
-    public function addCompte(Compte $compte): self
-    {
-        if (!$this->comptes->contains($compte)) {
-            $this->comptes[] = $compte;
-            $compte->setPartenaireId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCompte(Compte $compte): self
-    {
-        if ($this->comptes->contains($compte)) {
-            $this->comptes->removeElement($compte);
-            // set the owning side to null (unless already changed)
-            if ($compte->getPartenaireId() === $this) {
-                $compte->setPartenaireId(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getNomComplet(): ?string
     {
         return $this->nomComplet;
@@ -190,30 +136,61 @@ class Partenaire
     }
 
     /**
-     * @return Collection|User[]
+     * @return Collection|Compte[]
      */
-    public function getParte(): Collection
+    public function getComptes1(): Collection
     {
-        return $this->parte;
+        return $this->comptes1;
     }
 
-    public function addParte(User $parte): self
+    public function addComptes1(Compte $comptes1): self
     {
-        if (!$this->parte->contains($parte)) {
-            $this->parte[] = $parte;
-            $parte->setUserIdPartenaire($this);
+        if (!$this->comptes1->contains($comptes1)) {
+            $this->comptes1[] = $comptes1;
+            $comptes1->setPartenaireCompte($this);
         }
 
         return $this;
     }
 
-    public function removeParte(User $parte): self
+    public function removeComptes1(Compte $comptes1): self
     {
-        if ($this->parte->contains($parte)) {
-            $this->parte->removeElement($parte);
+        if ($this->comptes1->contains($comptes1)) {
+            $this->comptes1->removeElement($comptes1);
             // set the owning side to null (unless already changed)
-            if ($parte->getUserIdPartenaire() === $this) {
-                $parte->setUserIdPartenaire(null);
+            if ($comptes1->getPartenaireCompte() === $this) {
+                $comptes1->setPartenaireCompte(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): self
+    {
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+            $user->setUserParte($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): self
+    {
+        if ($this->users->contains($user)) {
+            $this->users->removeElement($user);
+            // set the owning side to null (unless already changed)
+            if ($user->getUserParte() === $this) {
+                $user->setUserParte(null);
             }
         }
 
@@ -231,4 +208,6 @@ class Partenaire
 
         return $this;
     }
+
+    
 }
