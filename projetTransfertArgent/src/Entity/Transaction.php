@@ -116,9 +116,20 @@ class Transaction
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="transaction2")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $transact2;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Compte", inversedBy="fdepot")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $depot;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Compte", inversedBy="fretrait")
+     */
+    private $retrait;
 
     public function getId(): ?int
     {
@@ -361,6 +372,30 @@ class Transaction
     public function setTransact2(?User $transact2): self
     {
         $this->transact2 = $transact2;
+
+        return $this;
+    }
+
+    public function getDepot(): ?Compte
+    {
+        return $this->depot;
+    }
+
+    public function setDepot(?Compte $depot): self
+    {
+        $this->depot = $depot;
+
+        return $this;
+    }
+
+    public function getRetrait(): ?Compte
+    {
+        return $this->retrait;
+    }
+
+    public function setRetrait(?Compte $retrait): self
+    {
+        $this->retrait = $retrait;
 
         return $this;
     }

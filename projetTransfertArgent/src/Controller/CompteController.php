@@ -39,8 +39,7 @@ class CompteController extends AbstractController
      */
     public function nouveaucomptePartenaire(Request $request, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $userPasswordEncoder)
     {
-    //     $a = $this->denyAccessUnlessGranted('POST', $this->getUser());
-    //    // dd($a);
+    
         $values = json_decode($request->getContent());
         
         if(isset($values->login,$values->password,$values->ninea,$values->montantDepot,$values->nomComplet,$values->adresse,$values->telephone,$values->registreCommerce))
@@ -62,6 +61,7 @@ class CompteController extends AbstractController
             $user->setUsername($values->username);
             $user->setPassword($userPasswordEncoder->encodePassword($user, $values->password));
             $user->setProfile($roles);
+            $user->setUserParte($partenaire);
             
             $entityManager->persist($user);
          
@@ -72,6 +72,7 @@ class CompteController extends AbstractController
             $partenaire->setNomComplet($values->nomComplet);
             $partenaire->setAdresse($values->adresse);
             $partenaire->setTelephone($values->telephone);
+           // dd($partenaire);
     
             $entityManager->persist($partenaire);
           
@@ -85,7 +86,7 @@ class CompteController extends AbstractController
                     #####   COMPTE    ######
             
             $compte->setNumeroCompte($numeroCompte);
-            $compte->setSolde($values->montantDepot);
+            $compte->setSolde(0);
             $compte->setDateCreation($dateCreation);
             $compte->setIduser($user); 
             $compte->setPartenaireCompte($partenaire); 

@@ -59,10 +59,28 @@ class Compte
      */
     private $partenaireCompte;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Affection", mappedBy="compte")
+     */
+    private $compte;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transaction", mappedBy="depot")
+     */
+    private $fdepot;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transaction", mappedBy="retrait")
+     */
+    private $fretrait;
+
     public function __construct()
     {
         $this->depots = new ArrayCollection();
         $this->idCompte = new ArrayCollection();
+        $this->compte = new ArrayCollection();
+        $this->fdepot = new ArrayCollection();
+        $this->fretrait = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -188,6 +206,99 @@ class Compte
     public function setPartenaireCompte(?Partenaire $partenaireCompte): self
     {
         $this->partenaireCompte = $partenaireCompte;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Affection[]
+     */
+    public function getCompte(): Collection
+    {
+        return $this->compte;
+    }
+
+    public function addCompte(Affection $compte): self
+    {
+        if (!$this->compte->contains($compte)) {
+            $this->compte[] = $compte;
+            $compte->setCompte($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCompte(Affection $compte): self
+    {
+        if ($this->compte->contains($compte)) {
+            $this->compte->removeElement($compte);
+            // set the owning side to null (unless already changed)
+            if ($compte->getCompte() === $this) {
+                $compte->setCompte(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Transaction[]
+     */
+    public function getFdepot(): Collection
+    {
+        return $this->fdepot;
+    }
+
+    public function addFdepot(Transaction $fdepot): self
+    {
+        if (!$this->fdepot->contains($fdepot)) {
+            $this->fdepot[] = $fdepot;
+            $fdepot->setDepot($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFdepot(Transaction $fdepot): self
+    {
+        if ($this->fdepot->contains($fdepot)) {
+            $this->fdepot->removeElement($fdepot);
+            // set the owning side to null (unless already changed)
+            if ($fdepot->getDepot() === $this) {
+                $fdepot->setDepot(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Transaction[]
+     */
+    public function getFretrait(): Collection
+    {
+        return $this->fretrait;
+    }
+
+    public function addFretrait(Transaction $fretrait): self
+    {
+        if (!$this->fretrait->contains($fretrait)) {
+            $this->fretrait[] = $fretrait;
+            $fretrait->setRetrait($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFretrait(Transaction $fretrait): self
+    {
+        if ($this->fretrait->contains($fretrait)) {
+            $this->fretrait->removeElement($fretrait);
+            // set the owning side to null (unless already changed)
+            if ($fretrait->getRetrait() === $this) {
+                $fretrait->setRetrait(null);
+            }
+        }
 
         return $this;
     }

@@ -11,10 +11,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\SerializedName;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 
 /**
@@ -28,6 +30,8 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
  * )
  * 
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @UniqueEntity(fields= {"login"}, message= "L'email est déjà utilisé")
+ * @UniqueEntity(fields= {"username"}, message= "Le nom d'utilisateur est déjà utilisé")
  */
 class User implements UserInterface
 {
@@ -45,14 +49,22 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     */
+     * @Assert\Length(min="8", minMessage="Votre mot de passe doit contenir minimum 8 caractères")
+     */ 
+     
     private $password;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
+     * @Assert\Regex(
+     *     pattern="/^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/",
+     *     message="L'email n'est pas valide")
      */
     private $login;
-   
+
+    /**
+     * @ORM\Column(type="json")
+     */
     private $roles=[];
 
     /**
@@ -101,6 +113,11 @@ class User implements UserInterface
      */
     private $partenaire;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Affection", mappedBy="user")
+     */
+    private $user;
+
     public function __construct()
     {
         $this->transaction1 = new ArrayCollection();
@@ -108,6 +125,7 @@ class User implements UserInterface
         $this->iduserDepot = new ArrayCollection();
         $this->comptes = new ArrayCollection();
         $this->partenaire = new ArrayCollection();
+        $this->user = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -372,6 +390,37 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($partenaire->getUser() === $this) {
                 $partenaire->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Affection[]
+     */
+    public function getUser(): Collection
+    {
+        return $this->user;
+    }
+
+    public function addUser(Affection $user): self
+    {
+        if (!$this->user->contains($user)) {
+            $this->user[] = $user;
+            $user->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(Affection $user): self
+    {
+        if ($this->user->contains($user)) {
+            $this->user->removeElement($user);
+            // set the owning side to null (unless already changed)
+            if ($user->getUser() === $this) {
+                $user->setUser(null);
             }
         }
 
