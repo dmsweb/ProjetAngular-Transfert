@@ -78,10 +78,9 @@ class CompteController extends AbstractController
           
             ####    GENERATION DU NUMERO DE COMPTE  ####
             $annees = Date('y');
-            $cpt = $this->getLastCompte();
-            $long = strlen($cpt);
-            $ninea2 = substr($partenaire->getNinea() , -2);
-            $numeroCompte = str_pad("MA".$annees.$ninea2, 9-$long, "0").$cpt;
+            $num = rand(100000000, 999999999);
+            $sn = "SN";
+            $numeroCompte = $sn . $num ;
 
                     #####   COMPTE    ######
             

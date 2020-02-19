@@ -131,6 +131,21 @@ class Transaction
      */
     private $retrait;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $prenomE;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $nomE;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $nomsRecepteur;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -396,6 +411,42 @@ class Transaction
     public function setRetrait(?Compte $retrait): self
     {
         $this->retrait = $retrait;
+
+        return $this;
+    }
+
+    public function getPrenomE(): ?string
+    {
+        return $this->prenomE;
+    }
+
+    public function setPrenomE(string $prenomE): self
+    {
+        $this->prenomE = $prenomE;
+
+        return $this;
+    }
+
+    public function getNomE(): ?string
+    {
+        return $this->nomE;
+    }
+
+    public function setNomE(string $nomE): self
+    {
+        $this->nomE = $nomE;
+
+        return $this;
+    }
+
+    public function getNomsRecepteur(): ?string
+    {
+        return $this->nomsRecepteur;
+    }
+
+    public function setNomsRecepteur(string $nomsRecepteur): self
+    {
+        $this->nomsRecepteur = $nomsRecepteur;
 
         return $this;
     }
