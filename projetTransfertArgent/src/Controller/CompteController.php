@@ -81,7 +81,7 @@ class CompteController extends AbstractController
             $cpt = $this->getLastCompte();
             $long = strlen($cpt);
             $ninea2 = substr($partenaire->getNinea() , -2);
-            $numeroCompte = str_pad("MA".$annees.$ninea2, 11-$long, "0").$cpt;
+            $numeroCompte = str_pad("MA".$annees.$ninea2, 9-$long, "0").$cpt;
 
                     #####   COMPTE    ######
             

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\User;
+use App\Entity\Depot;
 use App\Entity\Compte;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -11,7 +12,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
  * @ApiResource( 
  *   collectionOperations={
  *          "get",
- *          "post"={  "access_control"="is_granted('POST', object)",
+ *          "post"={  "access_control"="is_granted('VIEW', object)",
  *  }
  *     }
  * )

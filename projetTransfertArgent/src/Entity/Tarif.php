@@ -21,22 +21,58 @@ class Tarif
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $info;
+    private $inferieur;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $supperieur;
+
+    /**
+     * @ORM\Column(type="float", length=255)
+     */
+    private $frais;
+
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getInfo(): ?string
+    public function getInferieur(): ?string
     {
-        return $this->info;
+        return $this->inferieur;
     }
 
-    public function setInfo(string $info): self
+    public function setInferieur(string $inferieur): self
     {
-        $this->info = $info;
+        $this->inferieur = $inferieur;
 
         return $this;
     }
+
+    public function getSupperieur(): ?string
+    {
+        return $this->supperieur;
+    }
+
+    public function setSupperieur(string $supperieur): self
+    {
+        $this->supperieur = $supperieur;
+
+        return $this;
+    }
+
+    public function getFrais(): ?string
+    {
+        return $this->frais;
+    }
+
+    public function setFrais(string $frais): self
+    {
+        $this->frais = $frais;
+
+        return $this;
+    }
+
 }

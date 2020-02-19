@@ -16,6 +16,7 @@ class UserDataPersister implements DataPersisterInterface
 {
     
     private $userPasswordEncoder;
+    
     public function __construct(EntityManagerInterface $entitymanager, UserPasswordEncoderInterface $userPasswordEncoder)
     {
         $this->userPasswordEncoder = $userPasswordEncoder;

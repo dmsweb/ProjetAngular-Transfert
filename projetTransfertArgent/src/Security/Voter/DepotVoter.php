@@ -11,45 +11,56 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-class DepotVoter extends Voter implements VoterInterface
+class DepotVoter extends Voter 
 {
     protected function supports($attribute, $subject)
     {
-        // replace with your own logic
-        // https://symfony.com/doc/current/security/voters.html
-        return in_array($attribute, ['POST', 'VIEW'])
-            && $subject instanceof \App\Entity\Depot;
+        
+        return  $subject instanceof \App\Entity\Depot && in_array($attribute, array(
+            'ROLE_SUPER_ADMIN', 
+            'ROLE_ADMIN',
+            'ROLE_CAISSIER',
+            'ROLE_PARTENAIRE'
+            
+        ));
+        
     }
 
-    protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
+    protected function voteOnAttribute($attribute, $object, TokenInterface $token)
     {
         $userDepot = $token->getUser();
-        // if the user is anonymous, do not grant access
-        if (!$userDepot instanceof User) {
-            return false;
-        }
-        if($userDepot->getRoles()[0]==="ROLE_SUPER_ADMIN" && $subject->getRoles()[0] != "ROLE_SUPER_ADMIN" ){
+
+        if(in_array('ROLE_SUPER_ADMIN', $userDepot->getRoles()) or in_array('ROLE_ADMIN', $userDepot->getRoles()))
+        {
             return true;
         }
 
         // ... (check conditions and return true to grant permission) ...
-        switch ($attribute) {
-            case 'POST':
+     
 
-                if($userDepot->getRoles()[0]==="ROLE_ADMIN" && ($subject->getRoles()[0] === "ROLE_CAISSIER")){
-                    return true;
-
-                }else if($userDepot->getRoles()[0]==="ROLE_PARTENAIRE"){
-
-                    return false;
-                }
-                      
-                break;
-            case 'VIEW':
-                // logic to determine if the user can VIEW
-                // return true or false
-                break;
+       if(in_array('ROLE_CAISSIER', $userDepot->getRoles()))
+       {
+         foreach($userDepot->getCaissier() as $caissier)
+           if ($caissier->getDepot()->contains($object)) 
+           {
+                return true;
+            }
         }
+          if(in_array('ROLE_PARTENAIRE', $userDepot->getRoles()))
+          {
+           if ($userDepot->getDepot()->contains($object))
+            {
+            return false;
+           }
+                  
+         }
+                      
+            //     break;
+            // case 'VIEW':
+            //     // logic to determine if the user can VIEW
+            //     // return true or false
+            //     break;
+        
 
         return false;
     }
