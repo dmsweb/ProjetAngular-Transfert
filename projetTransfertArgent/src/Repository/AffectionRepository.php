@@ -22,19 +22,21 @@ class AffectionRepository extends ServiceEntityRepository
     // /**
     //  * @return Affection[] Returns an array of Affection objects
     //  */
-    /*
-    public function findByExampleField($value)
+    
+    public function findComptAffecter($compteId):array
     {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('a.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        $req = $this->createQueryBuilder('a')
+            ->Where('a.compteId > :compteId')
+            ->setParameter('compteId', $compteId);
+
+
+            $query = $req->getQuery();
+
+    return $query->execute();
+            
+        
     }
-    */
+    
 
     /*
     public function findOneBySomeField($value): ?Affection

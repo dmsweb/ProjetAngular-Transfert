@@ -36,7 +36,7 @@ class Affection
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Compte", inversedBy="compte")
      */
-    private $compte;
+    private $compteId;
 
     public function getId(): ?int
     {
@@ -79,14 +79,14 @@ class Affection
         return $this;
     }
 
-    public function getCompte(): ?Compte
+    public function getCompteId(): ?Compte
     {
-        return $this->compte;
+        return $this->compteId;
     }
 
-    public function setCompte(?Compte $compte): self
+    public function setCompteId(?Compte $compteId): self
     {
-        $this->compte = $compte;
+        $this->compteId = $compteId;
 
         return $this;
     }

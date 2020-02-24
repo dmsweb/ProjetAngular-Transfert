@@ -34,8 +34,8 @@ class AppFixtures extends Fixture
         $profile4= new Profile();
         $profile4->setLibelle('ROLE_PARTENAIRE');
         $manager->persist($profile4);
-        
-
+        //
+    
         $user= new User();
         $user->setLogin('diengkorrou88@gmail.com');
         $user->setProfile($profile1);

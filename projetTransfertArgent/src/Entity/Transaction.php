@@ -33,10 +33,10 @@ class Transaction
      */
     private $frais;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $clientEmetteur;
+    // /**
+    //  * @ORM\Column(type="string", length=255)
+    //  */
+    // private $clientEmetteur;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -56,42 +56,42 @@ class Transaction
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $telEmetteur;
+    private $telephoneE;
 
     /**
      * @ORM\Column(type="float")
      */
-    private $commissionEmetteur;
+    private $commissionenvoie;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $dateRetrait;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $clientRecepteur;
+    // /**
+    //  * @ORM\Column(type="string", length=255)
+    //  */
+    // private $clientRecepteur;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $typePRecepteur;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $telRecepteur;
+    private $telephoneR;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $numeroPRecepteur;
 
     /**
      * @ORM\Column(type="float")
      */
-    private $commissionRecepteur;
+    private $commissionretrait;
 
     /**
      * @ORM\Column(type="float")
@@ -187,18 +187,6 @@ class Transaction
         return $this;
     }
 
-    public function getClientEmetteur(): ?string
-    {
-        return $this->clientEmetteur;
-    }
-
-    public function setClientEmetteur(string $clientEmetteur): self
-    {
-        $this->clientEmetteur = $clientEmetteur;
-
-        return $this;
-    }
-
     public function getTypePEmetteur(): ?string
     {
         return $this->typePEmetteur;
@@ -235,26 +223,26 @@ class Transaction
         return $this;
     }
 
-    public function getTelEmetteur(): ?string
+    public function getTelephoneE(): ?string
     {
-        return $this->telEmetteur;
+        return $this->telephoneE;
     }
 
-    public function setTelEmetteur(string $telEmetteur): self
+    public function setTelephoneE(string $telephoneE): self
     {
-        $this->telEmetteur = $telEmetteur;
+        $this->telephoneE = $telephoneE;
 
         return $this;
     }
 
-    public function getCommissionEmetteur(): ?float
+    public function getCommissionenvoie(): ?float
     {
-        return $this->commissionEmetteur;
+        return $this->commissionenvoie;
     }
 
-    public function setCommissionEmetteur(float $commissionEmetteur): self
+    public function setCommissionenvoie(float $commissionenvoie): self
     {
-        $this->commissionEmetteur = $commissionEmetteur;
+        $this->commissionenvoie = $commissionenvoie;
 
         return $this;
     }
@@ -271,18 +259,6 @@ class Transaction
         return $this;
     }
 
-    public function getClientRecepteur(): ?string
-    {
-        return $this->clientRecepteur;
-    }
-
-    public function setClientRecepteur(string $clientRecepteur): self
-    {
-        $this->clientRecepteur = $clientRecepteur;
-
-        return $this;
-    }
-
     public function getTypePRecepteur(): ?string
     {
         return $this->typePRecepteur;
@@ -295,14 +271,14 @@ class Transaction
         return $this;
     }
 
-    public function getTelRecepteur(): ?string
+    public function getTelephoneR(): ?string
     {
-        return $this->telRecepteur;
+        return $this->telephoneR;
     }
 
-    public function setTelRecepteur(string $telRecepteur): self
+    public function setTelephoneR(string $telephoneR): self
     {
-        $this->telRecepteur = $telRecepteur;
+        $this->telephoneR = $telephoneR;
 
         return $this;
     }
@@ -319,14 +295,14 @@ class Transaction
         return $this;
     }
 
-    public function getCommissionRecepteur(): ?float
+    public function getCommissionretrait(): ?float
     {
-        return $this->commissionRecepteur;
+        return $this->commissionretrait;
     }
 
-    public function setCommissionRecepteur(float $commissionRecepteur): self
+    public function setCommissionretrait(float $commissionretrait): self
     {
-        $this->commissionRecepteur = $commissionRecepteur;
+        $this->commissionretrait = $commissionretrait;
 
         return $this;
     }
