@@ -89,11 +89,6 @@ class User implements UserInterface
     private $transaction2;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Depot", mappedBy="depotuser")
-     */
-    private $iduserDepot;
-
-    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Compte", inversedBy="idCompte")
      */
     private $compte;
@@ -118,6 +113,11 @@ class User implements UserInterface
      */
     private $user;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Depot", mappedBy="userDepot", orphanRemoval=true)
+     */
+    private $depots;
+
     public function __construct()
     {
         $this->transaction1 = new ArrayCollection();
@@ -126,6 +126,8 @@ class User implements UserInterface
         $this->comptes = new ArrayCollection();
         $this->partenaire = new ArrayCollection();
         $this->user = new ArrayCollection();
+        $this->depots = new ArrayCollection();
+        $this->isActive = true;
     }
 
     public function getId(): ?int
@@ -279,37 +281,6 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return Collection|Depot[]
-     */
-    public function getIduserDepot(): Collection
-    {
-        return $this->iduserDepot;
-    }
-
-    public function addIduserDepot(Depot $iduserDepot): self
-    {
-        if (!$this->iduserDepot->contains($iduserDepot)) {
-            $this->iduserDepot[] = $iduserDepot;
-            $iduserDepot->setDepotuser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeIduserDepot(Depot $iduserDepot): self
-    {
-        if ($this->iduserDepot->contains($iduserDepot)) {
-            $this->iduserDepot->removeElement($iduserDepot);
-            // set the owning side to null (unless already changed)
-            if ($iduserDepot->getDepotuser() === $this) {
-                $iduserDepot->setDepotuser(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getCompte(): ?Compte
     {
         return $this->compte;
@@ -421,6 +392,37 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($user->getUser() === $this) {
                 $user->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Depot[]
+     */
+    public function getDepots(): Collection
+    {
+        return $this->depots;
+    }
+
+    public function addDepot(Depot $depot): self
+    {
+        if (!$this->depots->contains($depot)) {
+            $this->depots[] = $depot;
+            $depot->setUserDepot($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDepot(Depot $depot): self
+    {
+        if ($this->depots->contains($depot)) {
+            $this->depots->removeElement($depot);
+            // set the owning side to null (unless already changed)
+            if ($depot->getUserDepot() === $this) {
+                $depot->setUserDepot(null);
             }
         }
 

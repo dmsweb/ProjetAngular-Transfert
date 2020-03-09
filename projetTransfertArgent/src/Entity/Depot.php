@@ -38,16 +38,16 @@ class Depot
     private $dateDepot;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="iduserDepot")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $depotuser;
-
-    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Compte", inversedBy="depots")
      * @ORM\JoinColumn(nullable=false)
      */
     private $numeroCompte;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="depots")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $userDepot;
 
 
     
@@ -81,18 +81,6 @@ class Depot
         return $this;
     }
 
-    public function getDepotuser(): ?User
-    {
-        return $this->depotuser;
-    }
-
-    public function setDepotuser(?User $depotuser): self
-    {
-        $this->depotuser = $depotuser;
-
-        return $this;
-    }
-
     public function getNumeroCompte(): ?Compte
     {
         return $this->numeroCompte;
@@ -101,6 +89,18 @@ class Depot
     public function setNumeroCompte(?Compte $numeroCompte): self
     {
         $this->numeroCompte = $numeroCompte;
+
+        return $this;
+    }
+
+    public function getUserDepot(): ?User
+    {
+        return $this->userDepot;
+    }
+
+    public function setUserDepot(?User $userDepot): self
+    {
+        $this->userDepot = $userDepot;
 
         return $this;
     }
