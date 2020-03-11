@@ -1,0 +1,31 @@
+<div class="col-md-6 offset-md-3 mt-5">
+<div class="card">
+<h4 class="card-header bg-primary" style="color: white">DMS TRANSFERT Liste des Users</h4>
+<div class="card-body">
+</div></div>
+<table class="table table-bordered">
+    <thead class="bg-primary">
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Login</th>
+            <th scope="col">Profile</th>
+            <th scope="col">Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let user of dataUsers">
+          <th>{{user.id}} </th>
+          <td>{{user.login}}</td>
+          <td>{{user.profile.libelle}}</td>
+          <td>
+            <div *ngIf="user.isActive; else elseblock">
+              <button class="btn btn-success" (click)="onStatus(user.id)">Activé</button>
+            </div>
+            <ng-template #elseblock>
+               <button class="btn btn-danger" (click)="onStatus(user.id)">Desactivé</button>
+            </ng-template>
+          </td>
+        </tr>
+    </tbody>
+</table>
+

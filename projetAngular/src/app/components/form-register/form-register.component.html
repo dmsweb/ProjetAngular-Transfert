@@ -1,7 +1,7 @@
-<div class="col-md-6 offset-md-3 mt-5">
+<div class="col-md-6 offset-md-3 mt-3">
 <div class="card">
-  <h4 class="card-header">Création Utilisateurs:</h4>
-  <div class="card-body">
+<h4 class="card-header bg-primary" style="color: white">DMS TRANSFERT ADMIN</h4>
+<div class="card-body">
 <form [formGroup] ="registerForm">
     <div class="form-group">
       <label for="username">Username</label>
@@ -22,10 +22,9 @@
         <option *ngFor="let profile of profiles" value="{{profile.id}}">{{profile.libelle}}</option>
       </select>
     </div>
-    <button type="submit" class="btn btn-primary" (click)="onSubmit()">Enregistrer</button>
+    <button type="submit" class="btn bg-primary" style="color: white" (click)="onSubmit()">Enregistrer</button>
  
 </form>
 </div>
 </div>
 </div>
-

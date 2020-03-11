@@ -45,6 +45,7 @@ export class FormRegisterComponent implements OnInit {
       profile: `api/profiles/${this.registerForm.value.profile}`
 
     }
+    console.log(donnes);
     this.userService.register(donnes).subscribe(data => 
       {
         alert(JSON.stringify(data));

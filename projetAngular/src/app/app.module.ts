@@ -11,6 +11,7 @@ import { JwtInterceptorService } from './helpers/jwt-interceptor.service';
 import { FormRegisterComponent } from './components/form-register/form-register.component';
 import { AdminsystemComponent } from './pages/adminsystem/adminsystem.component';
 import { from } from 'rxjs';
+import { AfficheUserComponent } from './components/affiche-user/affiche-user.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { from } from 'rxjs';
     AuthenticationComponent,
     FormLoginComponent,
     FormRegisterComponent,
-    AdminsystemComponent
+    AdminsystemComponent,
+    AfficheUserComponent
   ],
   imports: [
     BrowserModule,

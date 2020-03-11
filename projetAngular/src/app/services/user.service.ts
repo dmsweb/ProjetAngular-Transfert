@@ -15,4 +15,12 @@ export class UserService {
   {
   	return this.http.post<any>(`${environment.apiUrl}/api/users`, data);
   }
+  getAll()
+  {
+  	return this.http.get(`${environment.apiUrl}/api/users`);
+  }
+  getStatus(id: number)
+  {
+    return this.http.get(`${environment.apiUrl}/api/users/status/${id}`);
+  }
 }
